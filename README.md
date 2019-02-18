@@ -56,7 +56,7 @@ As we can see, the reconstructed images are less blurred than the previous ones:
 
 # Installation
 
-It requires python3, python3-pip and the packages listed in (requirements.txt)[requirements.txt].
+It requires python3, python3-pip and the packages listed in [requirements.txt](requirements.txt).
 
 To install the required packages:
 ```bash
