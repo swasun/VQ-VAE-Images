@@ -43,52 +43,64 @@ class Configuration(object):
         [ksw0306/ClariNet] https://github.com/ksw0306/ClariNet.
     """
 
-    def __init__(self, batch_size=32, num_training_updates=25000, \
-        num_hiddens=128, num_residual_hiddens=32, num_residual_layers=2, \
-        embedding_dim=64, num_embeddings=512, commitment_cost=0.25, \
-        decay=0.99, learning_rate=3e-4, use_kaiming_normal=True):
+    default_batch_size = 32 # 32 instead of 128 specified in the paper
+    default_num_training_updates = 25000 # 25K instead of 250K specified in the paper
+    default_num_hiddens = 128
+    default_num_residual_hiddens = 32 # 32 instead of 256 specified in the paper
+    default_num_residual_layers = 2
 
-        self._batch_size = batch_size # 32 instead of 128 specified in the paper
-        self._num_training_updates = num_training_updates # 25K instead of 250K specified in the paper
+    """
+    This value is not that important, usually 64 works.
+    This will not change the capacity in the information-bottleneck.
+    """
+    default_embedding_dim = 64
+
+    default_num_embeddings = 512 # The higher this value, the higher the capacity in the information bottleneck.
+
+    """
+    Commitment cost should be set appropriately. It's often useful to try a couple
+    of values. It mostly depends on the scale of the reconstruction cost
+    (log p(x|z)). So if the reconstruction cost is 100x higher, the
+    commitment_cost should also be multiplied with the same amount.
+    """
+    default_commitment_cost = 0.25 # 0.25 as specified in the paper
+
+    """
+    Only uses for the EMA updates (instead of the Adam optimizer).
+    This typically converges faster, and makes the model less dependent on choice
+    of the optimizer. In the original VQ-VAE paper [van den Oord et al., 2017],
+    EMA updates were not used (but suggested in appendix) and compared in
+    [Roy et al., 2018].
+    """
+    default_decay = 0.99
+
+    default_learning_rate = 3e-4 # 3e-4 instead of 2e-4 specified in the paper
+
+    """
+    Weight initialization proposed by [He, K et al., 2015].
+    PyTorch doc: https://pytorch.org/docs/stable/nn.html#torch.nn.init.kaiming_normal_.
+    The model seems to converge faster using it.
+    In addition to that, I used nn.utils.weight_norm() before each use of kaiming_normal(),
+    as they do in [ksw0306/ClariNet], because it works better.
+    """
+    default_use_kaiming_normal = True
+
+    def __init__(self, batch_size=default_batch_size, num_training_updates=default_num_training_updates, \
+        num_hiddens=default_num_hiddens, num_residual_hiddens=default_num_residual_hiddens, \
+        num_residual_layers=default_num_residual_layers, embedding_dim=default_embedding_dim, \
+        num_embeddings=default_num_embeddings, commitment_cost=default_commitment_cost, \
+        decay=default_decay, learning_rate=default_learning_rate, use_kaiming_normal=default_use_kaiming_normal):
+
+        self._batch_size = batch_size
+        self._num_training_updates = num_training_updates
         self._num_hiddens = num_hiddens
-        self._num_residual_hiddens = num_residual_hiddens # 32 instead of 256 specified in the paper
+        self._num_residual_hiddens = num_residual_hiddens
         self._num_residual_layers = num_residual_layers
-
-        """
-        This value is not that important, usually 64 works.
-        This will not change the capacity in the information-bottleneck.
-        """
         self._embedding_dim = embedding_dim
-
-        # The higher this value, the higher the capacity in the information bottleneck.
         self._num_embeddings = num_embeddings
-
-        """
-        Commitment cost should be set appropriately. It's often useful to try a couple
-        of values. It mostly depends on the scale of the reconstruction cost
-        (log p(x|z)). So if the reconstruction cost is 100x higher, the
-        commitment_cost should also be multiplied with the same amount.
-        """
-        self._commitment_cost = commitment_cost # 0.25 as specified in the paper
-
-        """
-        Only uses for the EMA updates (instead of the Adam optimizer).
-        This typically converges faster, and makes the model less dependent on choice
-        of the optimizer. In the original VQ-VAE paper [van den Oord et al., 2017],
-        EMA updates were not used (but suggested in appendix) and compared in
-        [Roy et al., 2018].
-        """
+        self._commitment_cost = commitment_cost
         self._decay = decay
-
-        self._learning_rate = learning_rate # 3e-4 instead of 2e-4 specified in the paper
-
-        """
-        Weight initialization proposed by [He, K et al., 2015].
-        PyTorch doc: https://pytorch.org/docs/stable/nn.html#torch.nn.init.kaiming_normal_.
-        The model seems to converge faster using it.
-        In addition to that, I used nn.utils.weight_norm() before each use of kaiming_normal(),
-        as they do in [ksw0306/ClariNet], because it works better.
-        """
+        self._learning_rate = learning_rate 
         self._use_kaiming_normal = use_kaiming_normal
 
     @property
@@ -134,3 +146,19 @@ class Configuration(object):
     @property
     def use_kaiming_normal(self):
         return self._use_kaiming_normal
+
+    @staticmethod
+    def build_from_args(args):
+        return Configuration(
+            batch_size=args.batch_size,
+            num_training_updates=args.num_training_updates,
+            num_hiddens=args.num_hiddens,
+            num_residual_hiddens=args.num_residual_hiddens,
+            num_residual_layers=args.num_residual_hiddens,
+            embedding_dim=args.embedding_dim,
+            num_embeddings=args.num_embeddings,
+            commitment_cost=args.commitment_cost,
+            decay=args.decay,
+            learning_rate=args.learning_rate,
+            use_kaiming_normal=args.use_kaiming_normal
+        )
