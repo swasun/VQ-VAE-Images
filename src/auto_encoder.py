@@ -48,7 +48,8 @@ class AutoEncoder(nn.Module):
             3,
             configuration.num_hiddens,
             configuration.num_residual_layers, 
-            configuration.num_residual_hiddens
+            configuration.num_residual_hiddens,
+            configuration.use_kaiming_normal
         )
 
         self._pre_vq_conv = nn.Conv2d(
@@ -78,7 +79,8 @@ class AutoEncoder(nn.Module):
             configuration.embedding_dim,
             configuration.num_hiddens, 
             configuration.num_residual_layers, 
-            configuration.num_residual_hiddens
+            configuration.num_residual_hiddens,
+            configuration.use_kaiming_normal
         )
 
     def forward(self, x):

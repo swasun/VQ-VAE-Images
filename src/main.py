@@ -53,10 +53,10 @@ if __name__ == "__main__":
     optimizer = optim.Adam(auto_encoder.parameters(), lr=configuration.learning_rate, amsgrad=True) # Create an Adam optimizer instance
     trainer = Trainer(device, auto_encoder, optimizer, dataset) # Create a trainer instance
     trainer.train(configuration.num_training_updates) # Train our model on the CIFAR10 dataset
-    trainer.save_loss_plot(results_path + os.sep + 'loss.png') # Save the loss plot
-    auto_encoder.save(results_path + os.sep + 'model.pth') # Save our trained model
+    trainer.save_loss_plot(results_path + os.sep + 'loss_ema_he-et-al.png') # Save the loss plot
+    auto_encoder.save(results_path + os.sep + 'model_ema_he-et-al.pth') # Save our trained model
 
     evaluator = Evaluator(device, auto_encoder, dataset) # Create en Evaluator instance to evaluate our trained model
     evaluator.reconstruct() # Reconstruct our images from the embedded space
-    evaluator.save_original_images_plot(results_path + os.sep + 'original_images.png') # Save the original images for comparaison purpose
-    evaluator.save_validation_reconstructions_plot(results_path + os.sep + 'validation_images.png') # Reconstruct the decoded images and save them
+    evaluator.save_original_images_plot(results_path + os.sep + 'original_images_ema_he-et-al.png') # Save the original images for comparaison purpose
+    evaluator.save_validation_reconstructions_plot(results_path + os.sep + 'validation_images_ema_he-et-al.png') # Reconstruct the decoded images and save them

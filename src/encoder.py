@@ -33,7 +33,7 @@ import torch.nn.functional as F
 
 class Encoder(nn.Module):
     
-    def __init__(self, in_channels, num_hiddens, num_residual_layers, num_residual_hiddens):
+    def __init__(self, in_channels, num_hiddens, num_residual_layers, num_residual_hiddens, use_kaiming_normal=False):
         super(Encoder, self).__init__()
 
         # Same parameters as specified in the paper
@@ -44,6 +44,9 @@ class Encoder(nn.Module):
             stride=2,
             padding=1
         )
+        if use_kaiming_normal:
+            self._conv_1 = nn.utils.weight_norm(self._conv_1)
+            nn.init.kaiming_normal_(self._conv_1.weight)
 
         # Same parameters as specified in the paper
         self._conv_2 = nn.Conv2d(
@@ -53,6 +56,9 @@ class Encoder(nn.Module):
             stride=2,
             padding=1
         )
+        if use_kaiming_normal:
+            self._conv_2 = nn.utils.weight_norm(self._conv_2)
+            nn.init.kaiming_normal_(self._conv_2.weight)
 
         # An additional layer as used in deepmind/sonnet implementation
         self._conv_3 = nn.Conv2d(
@@ -62,12 +68,16 @@ class Encoder(nn.Module):
             stride=1,
             padding=1
         )
+        if use_kaiming_normal:
+            self._conv3 = nn.utils.weight_norm(self._conv_3)
+            nn.init.kaiming_normal_(self._conv_3.weight)
 
         self._residual_stack = ResidualStack(
             in_channels=num_hiddens,
             num_hiddens=num_hiddens,
             num_residual_layers=num_residual_layers,
-            num_residual_hiddens=num_residual_hiddens
+            num_residual_hiddens=num_residual_hiddens,
+            use_kaiming_normal=use_kaiming_normal
         )
 
     def forward(self, inputs):
@@ -78,4 +88,5 @@ class Encoder(nn.Module):
         x = F.relu(x)
         
         x = self._conv_3(x)
+
         return self._residual_stack(x)

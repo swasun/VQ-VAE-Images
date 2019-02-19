@@ -37,12 +37,16 @@ class Configuration(object):
 
         [Roy et al., 2018] A. Roy, A. Vaswani, A. Neelakantan, and N. Parmar. Theory and experiments on vector
         quantized autoencoders.arXiv preprint arXiv:1805.11063, 2018.
+
+        [He, K et al., 2015] He, K., Zhang, X., Ren, S and Sun, J. Deep Residual Learning for Image Recognition. arXiv e-prints arXiv:1502.01852.
+
+        [ksw0306/ClariNet] https://github.com/ksw0306/ClariNet.
     """
 
     def __init__(self, batch_size=32, num_training_updates=25000, \
         num_hiddens=128, num_residual_hiddens=32, num_residual_layers=2, \
         embedding_dim=64, num_embeddings=512, commitment_cost=0.25, \
-        decay=0.99, learning_rate=3e-4):
+        decay=0.99, learning_rate=3e-4, use_kaiming_normal=True):
 
         self._batch_size = batch_size # 32 instead of 128 specified in the paper
         self._num_training_updates = num_training_updates # 25K instead of 250K specified in the paper
@@ -77,6 +81,15 @@ class Configuration(object):
         self._decay = decay
 
         self._learning_rate = learning_rate # 3e-4 instead of 2e-4 specified in the paper
+
+        """
+        Weight initialization proposed by [He, K et al., 2015].
+        PyTorch doc: https://pytorch.org/docs/stable/nn.html#torch.nn.init.kaiming_normal_.
+        The model seems to converge faster using it.
+        In addition to that, I used nn.utils.weight_norm() before each use of kaiming_normal(),
+        as they do in [ksw0306/ClariNet], because it works better.
+        """
+        self._use_kaiming_normal = use_kaiming_normal
 
     @property
     def batch_size(self):
@@ -117,3 +130,7 @@ class Configuration(object):
     @property
     def learning_rate(self):
         return self._learning_rate
+
+    @property
+    def use_kaiming_normal(self):
+        return self._use_kaiming_normal

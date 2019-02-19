@@ -54,6 +54,22 @@ As we can see, the reconstructed images are less blurred than the previous ones:
 
 ![alt text](results/validation_images_ema.png)
 
+## Using EMA updates + kaiming normal
+
+One can also use the weight normalization proposed by [He, K et al., 2015], as the model converges a little faster.
+
+![alt text](results/loss_ema_norm_he-et-al.png)
+
+The original images :
+
+![alt text](results/original_images_ema_norm_he-et-al.png)
+
+The reconstructed images :
+
+![alt text](results/validation_images_ema_norm_he-et-al.png)
+
+I also used `nn.utils.weight_norm()` before each call of `kaiming_normal()`, as they do in [ksw0306/ClariNet] because the model converged better. In my experiments, EMA + kaiming without this additional normalisation reduces the performances, as we can see in the [additional results](results/loss_ema_he-et-al.png).
+
 # Installation
 
 It requires python3, python3-pip and the packages listed in [requirements.txt](requirements.txt).
@@ -74,3 +90,7 @@ pip3 install -r requirements.txt
 * [deepmind/sonnet] https://github.com/deepmind/sonnet/blob/master/sonnet/examples/vqvae_example.ipynb.
 
 * [Roy et al., 2018] [A. Roy, A. Vaswani, A. Neelakantan, and N. Parmar. Theory and experiments on vector quantized autoencoders.arXiv preprint arXiv:1805.11063, 2018](https://arxiv.org/abs/1805.11063).
+
+* [He, K et al., 2015] [He, K., Zhang, X., Ren, S and Sun, J. Deep Residual Learning for Image Recognition. arXiv e-prints arXiv:1502.01852](https://arxiv.org/abs/1512.03385).
+
+* [ksw0306/ClariNet] https://github.com/ksw0306/ClariNet.

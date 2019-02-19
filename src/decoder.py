@@ -33,7 +33,7 @@ import torch.nn.functional as F
 
 class Decoder(nn.Module):
     
-    def __init__(self, in_channels, num_hiddens, num_residual_layers, num_residual_hiddens):
+    def __init__(self, in_channels, num_hiddens, num_residual_layers, num_residual_hiddens, use_kaiming_normal=False):
         super(Decoder, self).__init__()
         
         self._conv_1 = nn.Conv2d(
@@ -43,13 +43,17 @@ class Decoder(nn.Module):
             stride=1,
             padding=1
         )
+        if use_kaiming_normal:
+            self._conv_1 = nn.utils.weight_norm(self._conv_1)
+            nn.init.kaiming_normal_(self._conv_1.weight)
         
         # Same number of residual layers as specified in the paper
         self._residual_stack = ResidualStack(
             in_channels=num_hiddens,
             num_hiddens=num_hiddens,
             num_residual_layers=num_residual_layers,
-            num_residual_hiddens=num_residual_hiddens
+            num_residual_hiddens=num_residual_hiddens,
+            use_kaiming_normal=use_kaiming_normal
         )
         
         # Same parameters as specified in the paper
@@ -60,6 +64,9 @@ class Decoder(nn.Module):
             stride=2,
             padding=1
         )
+        if use_kaiming_normal:
+            self._conv_trans_1 = nn.utils.weight_norm(self._conv_trans_1)
+            nn.init.kaiming_normal_(self._conv_trans_1.weight)
         
         # Same parameters as specified in the paper
         self._conv_trans_2 = nn.ConvTranspose2d(
@@ -69,6 +76,9 @@ class Decoder(nn.Module):
             stride=2,
             padding=1
         )
+        if use_kaiming_normal:
+            self._conv_trans_2 = nn.utils.weight_norm(self._conv_trans_2)
+            nn.init.kaiming_normal_(self._conv_trans_2.weight)
 
     def forward(self, inputs):
         x = self._conv_1(inputs)
@@ -76,6 +86,8 @@ class Decoder(nn.Module):
         x = self._residual_stack(x)
         
         x = self._conv_trans_1(x)
+
         x = F.relu(x)
+        x = self._conv_trans_2(x)
         
-        return self._conv_trans_2(x)
+        return x
