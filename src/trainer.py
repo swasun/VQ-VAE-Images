@@ -66,25 +66,42 @@ class Trainer(object):
             self._train_res_perplexity.append(perplexity.item())
 
             if self._verbose and (i % (num_training_updates / 10) == 0):
-                print('%d iterations' % (i+1))
-                print('reconstruction error: %.3f' % np.mean(self._train_res_recon_error[-100:]))
-                print('perplexity: %.3f' % np.mean(self._train_res_perplexity[-100:]))
+                print('Iteration #{}'.format(i + 1))
+                print('Reconstruction error: %.3f' % np.mean(self._train_res_recon_error[-100:]))
+                print('Perplexity: %.3f' % np.mean(self._train_res_perplexity[-100:]))
                 print()
 
     def save_loss_plot(self, path):
-        train_res_recon_error_smooth = savgol_filter(self._train_res_recon_error, 201, 7)
-        train_res_perplexity_smooth = savgol_filter(self._train_res_perplexity, 201, 7)
-        fig = plt.figure(figsize=(16,8))
-        ax = fig.add_subplot(1,2,1)
+        maximum_window_length = 201
+        train_res_recon_error_len = len(self._train_res_recon_error)
+        train_res_recon_error_len = train_res_recon_error_len if train_res_recon_error_len % 2 == 1 else train_res_recon_error_len - 1
+        train_res_perplexity_len = len(self._train_res_perplexity)
+        train_res_perplexity_len = train_res_perplexity_len if train_res_perplexity_len % 2 == 1 else train_res_perplexity_len - 1
+        polyorder = 7
+
+        train_res_recon_error_smooth = savgol_filter(
+            self._train_res_recon_error,
+            maximum_window_length if train_res_recon_error_len > maximum_window_length else train_res_recon_error_len,
+            polyorder
+        )
+        train_res_perplexity_smooth = savgol_filter(
+            self._train_res_perplexity,
+            maximum_window_length if train_res_perplexity_len > maximum_window_length else train_res_perplexity_len,
+            polyorder
+        )
+
+        fig = plt.figure(figsize=(16, 8))
+
+        ax = fig.add_subplot(1, 2, 1)
         ax.plot(train_res_recon_error_smooth)
         ax.set_yscale('log')
         ax.set_title('Smoothed NMSE.')
-        ax.set_xlabel('iteration')
+        ax.set_xlabel('Iterations')
 
-        ax = fig.add_subplot(1,2,2)
+        ax = fig.add_subplot(1, 2, 2)
         ax.plot(train_res_perplexity_smooth)
         ax.set_title('Smoothed Average codebook usage (perplexity).')
-        ax.set_xlabel('iteration')
+        ax.set_xlabel('Iterations')
 
         fig.savefig(path)
         plt.close(fig)

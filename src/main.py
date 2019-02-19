@@ -46,7 +46,7 @@ if __name__ == "__main__":
     parser.add_argument('--embedding_dim', nargs='?', default=64, type=int, help='Representing the dimensionality of the tensors in the quantized space')
     parser.add_argument('--num_embeddings', nargs='?', default=512, type=int, help='The number of vectors in the quantized space')
     parser.add_argument('--commitment_cost', nargs='?', default=0.25, type=float, help='Controls the weighting of the loss terms')
-    parser.add_argument('--decay', nargs='?', default=0.99, type=float, help='Decay for the moving averages (set to 0 to not use EMA)')
+    parser.add_argument('--decay', nargs='?', default=0.99, type=float, help='Decay for the moving averages (set to 0.0 to not use EMA)')
     parser.add_argument('--learning_rate', nargs='?', default=3e-4, type=float, help='The learning rate of the optimizer during training updates')
     parser.add_argument('--use_kaiming_normal', nargs='?', default=True, type=bool, help='Use the weight normalization proposed in [He, K et al., 2015]')
     parser.add_argument('--data_path', nargs='?', default='data', type=str, help='The path of the data directory')
@@ -76,8 +76,8 @@ if __name__ == "__main__":
     optimizer = optim.Adam(auto_encoder.parameters(), lr=configuration.learning_rate, amsgrad=True) # Create an Adam optimizer instance
     trainer = Trainer(device, auto_encoder, optimizer, dataset) # Create a trainer instance
     trainer.train(configuration.num_training_updates) # Train our model on the CIFAR10 dataset
-    trainer.save_loss_plot(results_path + os.sep + args.loss_plot_name) # Save the loss plot
     auto_encoder.save(results_path + os.sep + args.model_name) # Save our trained model
+    trainer.save_loss_plot(results_path + os.sep + args.loss_plot_name) # Save the loss plot
 
     evaluator = Evaluator(device, auto_encoder, dataset) # Create en Evaluator instance to evaluate our trained model
     evaluator.reconstruct() # Reconstruct our images from the embedded space

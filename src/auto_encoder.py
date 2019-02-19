@@ -83,6 +83,22 @@ class AutoEncoder(nn.Module):
             configuration.use_kaiming_normal
         )
 
+    @property
+    def vq_vae(self):
+        return self._vq_vae
+
+    @property
+    def pre_vq_conv(self):
+        return self._pre_vq_conv
+
+    @property
+    def encoder(self):
+        return self._encoder
+
+    @property
+    def decoder(self):
+        return self._decoder
+
     def forward(self, x):
         z = self._encoder(x)
         z = self._pre_vq_conv(z)
@@ -100,6 +116,3 @@ class AutoEncoder(nn.Module):
         model.load_state_dict(torch.load(path, map_location=device))
         return model
 
-    @property
-    def vq_vae(self):
-        return self._vq_vae
