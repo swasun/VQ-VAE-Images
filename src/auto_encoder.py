@@ -40,6 +40,10 @@ class AutoEncoder(nn.Module):
     def __init__(self, device, configuration):
         super(AutoEncoder, self).__init__()
         
+        """
+        Create the Encoder with a fixed number of channel
+        (3 as specified in the paper).
+        """
         self._encoder = Encoder(
             3,
             configuration.num_hiddens,

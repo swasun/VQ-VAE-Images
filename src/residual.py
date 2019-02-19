@@ -33,6 +33,7 @@ class Residual(nn.Module):
     def __init__(self, in_channels, num_hiddens, num_residual_hiddens):
         super(Residual, self).__init__()
         
+        # All parameters same as specified in the paper
         self._block = nn.Sequential(
             nn.ReLU(True),
             nn.Conv2d(

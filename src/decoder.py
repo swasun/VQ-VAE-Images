@@ -44,6 +44,7 @@ class Decoder(nn.Module):
             padding=1
         )
         
+        # Same number of residual layers as specified in the paper
         self._residual_stack = ResidualStack(
             in_channels=num_hiddens,
             num_hiddens=num_hiddens,
@@ -51,6 +52,7 @@ class Decoder(nn.Module):
             num_residual_hiddens=num_residual_hiddens
         )
         
+        # Same parameters as specified in the paper
         self._conv_trans_1 = nn.ConvTranspose2d(
             in_channels=num_hiddens, 
             out_channels=num_hiddens//2,
@@ -59,6 +61,7 @@ class Decoder(nn.Module):
             padding=1
         )
         
+        # Same parameters as specified in the paper
         self._conv_trans_2 = nn.ConvTranspose2d(
             in_channels=num_hiddens//2, 
             out_channels=3,

@@ -45,10 +45,10 @@ class Configuration(object):
         embedding_dim=64, num_embeddings=512, commitment_cost=0.25, \
         decay=0.99, learning_rate=3e-4):
 
-        self._batch_size = batch_size
-        self._num_training_updates = num_training_updates
+        self._batch_size = batch_size # 32 instead of 128 specified in the paper
+        self._num_training_updates = num_training_updates # 25K instead of 250K specified in the paper
         self._num_hiddens = num_hiddens
-        self._num_residual_hiddens = num_residual_hiddens
+        self._num_residual_hiddens = num_residual_hiddens # 32 instead of 256 specified in the paper
         self._num_residual_layers = num_residual_layers
 
         """
@@ -66,17 +66,18 @@ class Configuration(object):
         (log p(x|z)). So if the reconstruction cost is 100x higher, the
         commitment_cost should also be multiplied with the same amount.
         """
-        self._commitment_cost = commitment_cost
+        self._commitment_cost = commitment_cost # 0.25 as specified in the paper
 
         """
         Only uses for the EMA updates (instead of the Adam optimizer).
         This typically converges faster, and makes the model less dependent on choice
         of the optimizer. In the original VQ-VAE paper [van den Oord et al., 2017],
-        EMA updates were not used (but was developed afterwards) on [Roy et al., 2018].
+        EMA updates were not used (but suggested in appendix) and compared in
+        [Roy et al., 2018].
         """
         self._decay = decay
 
-        self._learning_rate = learning_rate
+        self._learning_rate = learning_rate # 3e-4 instead of 2e-4 specified in the paper
 
     @property
     def batch_size(self):

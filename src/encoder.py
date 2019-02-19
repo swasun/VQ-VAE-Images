@@ -36,6 +36,7 @@ class Encoder(nn.Module):
     def __init__(self, in_channels, num_hiddens, num_residual_layers, num_residual_hiddens):
         super(Encoder, self).__init__()
 
+        # Same parameters as specified in the paper
         self._conv_1 = nn.Conv2d(
             in_channels=in_channels,
             out_channels=num_hiddens//2,
@@ -44,6 +45,7 @@ class Encoder(nn.Module):
             padding=1
         )
 
+        # Same parameters as specified in the paper
         self._conv_2 = nn.Conv2d(
             in_channels=num_hiddens//2,
             out_channels=num_hiddens,
@@ -52,6 +54,7 @@ class Encoder(nn.Module):
             padding=1
         )
 
+        # An additional layer as used in deepmind/sonnet implementation
         self._conv_3 = nn.Conv2d(
             in_channels=num_hiddens,
             out_channels=num_hiddens,
