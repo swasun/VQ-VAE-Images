@@ -1,0 +1,39 @@
+Iteration #1
+Reconstruction error: 4.080
+Perplexity: 5.553
+
+Iteration #2501
+Reconstruction error: 1.732
+Perplexity: 7.448
+
+Iteration #5001
+Reconstruction error: 1.281
+Perplexity: 16.729
+
+Iteration #7501
+Reconstruction error: 1.069
+Perplexity: 27.713
+
+Iteration #10001
+Reconstruction error: 0.879
+Perplexity: 30.323
+
+Iteration #12501
+Reconstruction error: 0.756
+Perplexity: 30.720
+
+Iteration #15001
+Reconstruction error: 0.696
+Perplexity: 31.510
+
+Iteration #17501
+Reconstruction error: 0.654
+Perplexity: 32.697
+
+Iteration #20001
+Reconstruction error: 0.624
+Perplexity: 34.298
+
+Iteration #22501
+Reconstruction error: 0.595
+Perplexity: 33.956

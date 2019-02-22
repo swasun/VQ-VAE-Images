@@ -34,7 +34,7 @@ import os
 
 class Cifar10Dataset(object):
 
-    def __init__(self, batch_size, path):
+    def __init__(self, batch_size, path, shuffle_dataset=True):
         if not os.path.isdir(path):
             os.mkdir(path)
 
@@ -61,14 +61,14 @@ class Cifar10Dataset(object):
         self._training_loader = DataLoader(
             self._training_data, 
             batch_size=batch_size, 
-            shuffle=True,
+            shuffle=shuffle_dataset,
             pin_memory=True
         )
 
         self._validation_loader = DataLoader(
             self._validation_data,
             batch_size=batch_size,
-            shuffle=True,
+            shuffle=shuffle_dataset,
             pin_memory=True
         )
 

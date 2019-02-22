@@ -85,11 +85,14 @@ class Configuration(object):
     """
     default_use_kaiming_normal = True
 
+    default_shuffle_dataset = True
+
     def __init__(self, batch_size=default_batch_size, num_training_updates=default_num_training_updates, \
         num_hiddens=default_num_hiddens, num_residual_hiddens=default_num_residual_hiddens, \
         num_residual_layers=default_num_residual_layers, embedding_dim=default_embedding_dim, \
         num_embeddings=default_num_embeddings, commitment_cost=default_commitment_cost, \
-        decay=default_decay, learning_rate=default_learning_rate, use_kaiming_normal=default_use_kaiming_normal):
+        decay=default_decay, learning_rate=default_learning_rate, use_kaiming_normal=default_use_kaiming_normal, \
+        shuffle_dataset=default_shuffle_dataset):
 
         self._batch_size = batch_size
         self._num_training_updates = num_training_updates
@@ -102,6 +105,7 @@ class Configuration(object):
         self._decay = decay
         self._learning_rate = learning_rate 
         self._use_kaiming_normal = use_kaiming_normal
+        self._shuffle_dataset = shuffle_dataset
 
     @property
     def batch_size(self):
@@ -147,6 +151,10 @@ class Configuration(object):
     def use_kaiming_normal(self):
         return self._use_kaiming_normal
 
+    @property
+    def shuffle_dataset(self):
+        return self._shuffle_dataset
+
     @staticmethod
     def build_from_args(args):
         return Configuration(
@@ -160,5 +168,6 @@ class Configuration(object):
             commitment_cost=args.commitment_cost,
             decay=args.decay,
             learning_rate=args.learning_rate,
-            use_kaiming_normal=args.use_kaiming_normal
+            use_kaiming_normal=args.use_kaiming_normal,
+            shuffle_dataset=args.shuffle_dataset
         )

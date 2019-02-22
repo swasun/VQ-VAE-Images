@@ -49,6 +49,7 @@ if __name__ == "__main__":
     parser.add_argument('--decay', nargs='?', default=Configuration.default_decay, type=float, help='Decay for the moving averages (set to 0.0 to not use EMA)')
     parser.add_argument('--learning_rate', nargs='?', default=Configuration.default_learning_rate, type=float, help='The learning rate of the optimizer during training updates')
     parser.add_argument('--use_kaiming_normal', nargs='?', default=Configuration.default_use_kaiming_normal, type=bool, help='Use the weight normalization proposed in [He, K et al., 2015]')
+    parser.add_argument('--shuffle_dataset', nargs='?', default=Configuration.default_shuffle_dataset, type=bool, help='Shuffle the dataset before training')
     parser.add_argument('--data_path', nargs='?', default='data', type=str, help='The path of the data directory')
     parser.add_argument('--results_path', nargs='?', default='results', type=str, help='The path of the results directory')
     parser.add_argument('--loss_plot_name', nargs='?', default='loss.png', type=str, help='The file name of the training loss plot')
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     
     dataset_path = '..' + os.sep + args.data_path
 
-    dataset = Cifar10Dataset(configuration.batch_size, dataset_path) # Create an instance of CIFAR10 dataset
+    dataset = Cifar10Dataset(configuration.batch_size, dataset_path, configuration.shuffle_dataset) # Create an instance of CIFAR10 dataset
     auto_encoder = AutoEncoder(device, configuration).to(device) # Create an AutoEncoder model using our GPU device
 
     optimizer = optim.Adam(auto_encoder.parameters(), lr=configuration.learning_rate, amsgrad=True) # Create an Adam optimizer instance
