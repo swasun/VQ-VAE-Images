@@ -31,6 +31,10 @@ import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 import os
 
+def cycle(iterable):
+    while True:
+        for x in iterable:
+            yield x
 
 class Trainer(object):
 
@@ -46,8 +50,9 @@ class Trainer(object):
     def train(self, num_training_updates):
         self._model.train()
 
+        iterator = iter(cycle(self._dataset.training_loader))
         for i in range(num_training_updates):
-            (data, _) = next(iter(self._dataset.training_loader))
+            (data, _) = next(iterator)
             data = data.to(self._device)
             self._optimizer.zero_grad()
 

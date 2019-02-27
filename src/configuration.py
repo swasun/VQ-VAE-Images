@@ -169,5 +169,5 @@ class Configuration(object):
             decay=args.decay,
             learning_rate=args.learning_rate,
             use_kaiming_normal=args.use_kaiming_normal,
-            shuffle_dataset=args.shuffle_dataset
+            shuffle_dataset=not args.unshuffle_dataset
         )

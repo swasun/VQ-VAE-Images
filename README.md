@@ -6,47 +6,49 @@ The trained models used in the following experiments are saved in `results/shuff
 
 The experiments was shorter than necessary as it was only for educational purpose. In order to obtain better image reconstructions, it is necessary to increase the number of residual hidden neurons (ie., 256 instead of 256) and to increase the number of training updates (ie., 250K instead of 25K).
 
+The following results (`results/unsuffled`) are slightly less good than (`results/shuffled`).
+
 ## Using original version
 
 Reconstruction loss plot using the original version by [van den Oord et al., 2017]:
 
-![alt text](results/shuffled//loss.png)
+![alt text](results/unshuffled//loss.png)
 
 The original images:
 
-![alt text](results/shuffled//original_images.png)
+![alt text](results/unshuffled//original_images.png)
 
 The reconstructed images:
 
-![alt text](results/shuffled//validation_images.png)
+![alt text](results/unshuffled//validation_images.png)
 
 ## Using EMA updates
 
 In my experiments, using the EMA updates proposes in [Roy et al., 2018], the final reconstruction loss was 2.66 times smaller (0.235 instead of 0.627) for shuffled dataset, and similar for unshuffled dataset:
 
-![alt text](results/shuffled//loss_ema.png)
+![alt text](results/unshuffled//loss_ema.png)
 
 The original images:
 
-![alt text](results/shuffled//original_images_ema.png)
+![alt text](results/unshuffled//original_images_ema.png)
 
 As we can see, the reconstructed images are less blurred than the previous ones:
 
-![alt text](results/shuffled//validation_images_ema.png)
+![alt text](results/unshuffled//validation_images_ema.png)
 
 ## Using EMA updates + kaiming normal
 
 One can also use the weight normalization proposed by [He, K et al., 2015], as the model converges a little faster.
 
-![alt text](results/shuffled//loss_ema_norm_he-et-al.png)
+![alt text](results/unshuffled//loss_ema_norm_he-et-al.png)
 
 The original images :
 
-![alt text](results/shuffled//original_images_ema_norm_he-et-al.png)
+![alt text](results/unshuffled//original_images_ema_norm_he-et-al.png)
 
 The reconstructed images :
 
-![alt text](results/shuffled//validation_images_ema_norm_he-et-al.png)
+![alt text](results/unshuffled//validation_images_ema_norm_he-et-al.png)
 
 I also used `nn.utils.weight_norm()` before each call of `kaiming_normal()`, as they do in [ksw0306/ClariNet] because the model converged better. In my experiments, EMA + kaiming without this additional normalisation reduces the performances, as we can see in the [additional results](results/shuffled/loss_ema_he-et-al.png).
 
@@ -121,8 +123,8 @@ optional arguments:
   --use_kaiming_normal [USE_KAIMING_NORMAL]
                         Use the weight normalization proposed in [He, K et
                         al., 2015] (default: True)
-  --shuffle_dataset [SHUFFLE_DATASET]
-                        Shuffle the dataset before training (default: True)
+  --unshuffle_dataset
+                        Do not shuffle the dataset before training (default: False)
   --data_path [DATA_PATH]
                         The path of the data directory (default: data)
   --results_path [RESULTS_PATH]
@@ -145,17 +147,17 @@ optional arguments:
 
 Use default vector quantized algorithm, do not shuffle the dataset and do not use [He, K et al., 2015] weight normalization:
 ```bash
-python3 main.py --shuffle_dataset=False --results_path="results/shuffled/" --use_kaiming_normal=False --decay=0.0
+python main.py --results_path="results/unshuffled/" --use_kaiming_normal=False --decay=0.0 --unshuffle_dataset
 ```
 
 Use EMA vector quantized algorithm, do not shuffle the dataset and do not use [He, K et al., 2015] weight normalization:
 ```bash
-python3 main.py --shuffle_dataset=False --results_path="results/shuffled/" --use_kaiming_normal=False --decay=0.99 --loss_plot_name="loss_ema.png" --model_name="model_ema.pth" --original_images_name="original_images_ema.png" --validation_images_name="validation_images_ema.png"
+python main.py --results_path="results/unshuffled/" --use_kaiming_normal=False --decay=0.99 --loss_plot_name="loss_ema.png" --model_name="model_ema.pth" --original_images_name="original_images_ema.png" --validation_images_name="validation_images_ema.png" --unshuffle_dataset
 ```
 
 Use EMA vector quantized algorithm, do not shuffle the dataset and do use [He, K et al., 2015] weight normalization:
 ```bash
-python3 main.py --shuffle_dataset=False --results_path="results/shuffled/" --use_kaiming_normal=True --decay=0.99 --loss_plot_name="loss_ema_norm_he-et-al.png" --model_name="model_ema_norm_he-et-al.pth" --original_images_name="original_images_ema_norm_he-et-al.png" --validation_images_name="validation_images_ema_norm_he-et-al.png"
+**python main.py --results_path="results/unshuffled/" --use_kaiming_normal=True --decay=0.99 --loss_plot_name="loss_ema_norm_he-et-al.png" --model_name="model_ema_norm_he-et-al.pth" --original_images_name="original_images_ema_norm_he-et-al.png" --validation_images_name="validation_images_ema_norm_he-et-al.png" --unshuffle_dataset**
 ```
 
 # Code usage

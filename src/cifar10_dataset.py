@@ -61,6 +61,7 @@ class Cifar10Dataset(object):
         self._training_loader = DataLoader(
             self._training_data, 
             batch_size=batch_size, 
+            num_workers=2,
             shuffle=shuffle_dataset,
             pin_memory=True
         )
@@ -68,6 +69,7 @@ class Cifar10Dataset(object):
         self._validation_loader = DataLoader(
             self._validation_data,
             batch_size=batch_size,
+            num_workers=2,
             shuffle=shuffle_dataset,
             pin_memory=True
         )
