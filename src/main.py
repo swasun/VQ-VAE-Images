@@ -56,13 +56,12 @@ if __name__ == "__main__":
     parser.add_argument('--model_name', nargs='?', default='model.pth', type=str, help='The file name of trained model')
     parser.add_argument('--original_images_name', nargs='?', default='original_images.png', type=str, help='The file name of the original images used in evaluation')
     parser.add_argument('--validation_images_name', nargs='?', default='validation_images.png', type=str, help='The file name of the reconstructed images used in evaluation')
-    parser.add_argument('--use_cuda_if_available', nargs='?', default=True, type=bool, help='Specify if GPU will be used if available')
     args = parser.parse_args()
 
     # Dataset and model hyperparameters
     configuration = Configuration.build_from_args(args)
 
-    device = torch.device('cuda' if args.use_cuda_if_available and torch.cuda.is_available() else 'cpu') # Use GPU if cuda is available
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # Use GPU if cuda is available
 
     # Set the result path and create the directory if it doesn't exist
     results_path = '..' + os.sep + args.results_path
